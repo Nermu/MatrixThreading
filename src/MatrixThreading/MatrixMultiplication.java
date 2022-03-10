@@ -23,7 +23,7 @@ public class MatrixMultiplication {
         int[][] ar1 = new int[r1][c1];
         int[][] ar2 = new int[r2][c2];
         int[][] result = new int[r1][c2];
-        MatrixThread[][] thread = new MatrixThread[r1][c2];
+        MatrixThread[] thread = new MatrixThread[r1];
 
         System.out.println("Insert elements for first matrix : ");
         for (int i = 0; i < r1; i++) {
@@ -42,18 +42,8 @@ public class MatrixMultiplication {
 
         for (int i = 0; i < r1; i++) {
             for (int j = 0; j < c2; j++) {
-                thread[i][j] = new MatrixThread(ar1, ar2, result, i, j, c1);
-                thread[i][j].start();
-            }
-        }
-
-        for (int i = 0; i < r1; i++) {
-            for (int j = 0; j < c2; j++) {
-                try {
-                    thread[i][j].join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                thread[i] = new MatrixThread(ar1, ar2, result, i, j, c1 );
+                thread[i].start();
             }
         }
 
