@@ -1,79 +1,53 @@
 package MAtrixWithThreading;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.Scanner;
 
-class Test extends Thread {
-    //Multiplying two matrices using thread on row
 
-    static int ar1[][];
-    static int ar2[][];
-    static int result[][];
-    static int n = 4;
+public class Test extends Thread{
+
+    static int[][] ar1, ar2, result;
+    static int x;
     int row;
 
-    Test(int i) {
-        row = i;
-        this.start();
+    public Test(int row){
+        this.row = row;
     }
 
-    public void run() {
-        int i, j;
-        for (i = 0; i < n; i++) {
+    @Override
+    public void run(){
+        for(int i = 0; i < x; i++){
             result[row][i] = 0;
-            for (j = 0; j < n; j++)
-                result[row][i] = result[row][i] + ar1[row][j] * ar2[j][i];
+            for(int j = 0; j < x;j++){
+                result[row][i] += ar1[row][j] * ar2[i][j];
+            }
         }
     }
 
-    public static void main(String args[]) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Enter the order of Matrix : ");
-        try {
-            n = 4;
-        } catch (Exception e) {
-        }
-
-        ar1 = new int[n][n];
-        ar2 = new int[n][n];
-        result = new int[n][n];
-
-        System.out.println("Enter the elements of first matrix :  ");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                try {
-                    ar1[i][j] = Integer.parseInt(br.readLine());
-                } catch (Exception e) {
-                }
+    //main method
+    public static void main(String[] args) {
+        System.out.println("Enter Size of matrix : ");
+        x = new Scanner(System.in).nextInt();
+        ar1 = new int[x][x];
+        ar2 = new int[x][x];
+        result = new int[x][x];
+        for(int i = 0; i < x;i++){
+            for(int j = 0; j < x;j++){
+                ar1[i][j] = 1;
+                ar2[i][j] = 1;
             }
         }
 
-        System.out.println("Enter the elements of second matrix :  ");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                try {
-                    ar2[i][j] = Integer.parseInt(br.readLine());
-                } catch (Exception e) {
-                }
-            }
-        }
+        for(int i=0;i<x;i++){
+            new Test(i).start();
 
-        Test mat[] = new Test[n];
-        for (int i = 0; i < n; i++)
-            mat[i] = new Test(i);
-        try {
-            for (int i = 0; i < n; i++)
-                mat[i].join();
-        } catch (Exception e) {
         }
-
-        System.out.println("Result of entered matrices :- ");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        System.out.println("Result Matrix is: ");
+        for(int i = 0; i < x;i++){
+            for(int j = 0; j < x;j++){
                 System.out.print(result[i][j] + " ");
             }
             System.out.println();
         }
     }
-}
 
+}
