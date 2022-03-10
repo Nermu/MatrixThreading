@@ -18,7 +18,6 @@ class MatrixThread extends Thread {
 
     @Override
     public void run() {
-
         int i, j;
         for ( i = 0; i < dim; i++) {
             result[row][i] = 0;
