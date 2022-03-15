@@ -3,7 +3,7 @@ package MatrixThreading;
 import java.util.Scanner;
 
 public class MatrixMultiplication {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         System.out.println("Insert size of first matrix :  ");
         int r1 = input.nextInt();
@@ -26,7 +26,6 @@ public class MatrixMultiplication {
                 ar1[i][j] = input.nextInt();
             }
         }
-
         System.out.println();
 
         System.out.println("Insert elements for second matrix : ");
@@ -38,24 +37,20 @@ public class MatrixMultiplication {
         System.out.println();
 
         int[][] result = new int[r1][c2];
-        MatrixThread[] t = new MatrixThread[r1] ;
+        MatrixThread[] t = new MatrixThread[r1];
 
-        //List<MatrixThread> threads = new ArrayList<>();
         for (int i = 0; i < r1; i++) {
-            //result = resultMatrix(ar1, ar2);
             t[i] = new MatrixThread(ar1, ar2, result, i, c2);
-           // threads.add(t[i]);
             t[i].start();
-            //t[i].join();
         }
         System.out.println();
 
         for (int i = 0; i < r1; i++) {
-                try {
-                    t[i].join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                t[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         System.out.println();
         System.out.println("Result Matrix : ");
