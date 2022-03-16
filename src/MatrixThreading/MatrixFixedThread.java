@@ -2,7 +2,10 @@ package MatrixThreading;
 
 import java.util.Scanner;
 
-public class MatrixMultiplication {
+public class MatrixFixedThread {
+
+    private static final int NO_THREADS = 5;
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         System.out.println("Insert size of first matrix :  ");
@@ -38,19 +41,24 @@ public class MatrixMultiplication {
 
         int[][] result = new int[r1][c2];
 
-        MatrixThread[] t = new MatrixThread[r1];
-        for (int i = 0; i < r1; i++) {
-            t[i] = new MatrixThread(ar1, ar2, result, i, c2);
-            t[i].start();
-        }
-        System.out.println();
-        for (int i = 0; i < r1; i++) {
-            try {
-                t[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        if (r1 <= NO_THREADS){
+            MatrixThread[] t = new MatrixThread[r1];
+
+            for (int i = 0; i < r1; i++) {
+                t[i] = new MatrixThread(ar1, ar2, result, i, c2);
+                t[i].start();
             }
-        }
+            System.out.println();
+
+            for (int i = 0; i < r1; i++) {
+                try {
+                    t[i].join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }else
+            System.out.println("----Out of Bounds----");
 
         System.out.println();
         System.out.println("Result Matrix : ");
