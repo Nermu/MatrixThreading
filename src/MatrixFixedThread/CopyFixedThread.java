@@ -1,14 +1,13 @@
 package MatrixFixedThread;
 
-import MatrixThreading.MatrixThread;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class MatrixFixedThread {
+public class CopyFixedThread {
 
     private static final int NO_THREADS = 5;
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Scanner input = new Scanner(System.in);
         System.out.println("Insert size of first matrix :  ");
         int r1 = input.nextInt();
@@ -42,32 +41,61 @@ public class MatrixFixedThread {
         System.out.println();
 
         int[][] result = new int[r1][c2];
+        List<FixedThread> threadArr = new ArrayList<FixedThread>(NO_THREADS);
 
-        if (r1 <= NO_THREADS){
-            MatrixThread[] t = new MatrixThread[r1];
 
+
+        //FixedThread[] t = new FixedThread[threadArr.size()];
+
+//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
+//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
+//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
+//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
+//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
+
+        for(int i = 0 ; i <NO_THREADS ; i++){
+
+        }
+
+        System.out.println(threadArr.size());
+        if (r1 < threadArr.size()){
             for (int i = 0; i < r1; i++) {
-                t[i] = new MatrixThread(ar1, ar2, result, i, c2);
-                t[i].start();
+
+                threadArr.add(new FixedThread(ar1,ar2,result,i,c2));
+                threadArr.get(i).start();
+                System.out.println("Thread : " + i);
             }
             System.out.println();
 
             for (int i = 0; i < r1; i++) {
+                try {
+                    threadArr.get(i).join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        /*else if (r1 == threadArr.size()){
+            for (int i = 0; i < threadArr.size(); i++) {
+                t[i] = new FixedThread(ar1, ar2, result, i, c2);
+                t[i].start();
+                System.out.println("Thread : " + i);
+            }
+            System.out.println();
+
+            for (int i = 0; i < threadArr.size(); i++) {
                 try {
                     t[i].join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        }else {
-            // if r1 and c2 > --- no of threads = 5 and start from 1 to finish all rows
+        }
+        else if (r1 > threadArr.size()) {
             System.out.println("----Out of Bounds----");
-            if (r1 > NO_THREADS){
-                MatrixThread[] t = new MatrixThread[r1];
-
                 for (int i = 0; i < r1; i++) {
-                    t[i] = new MatrixThread(ar1, ar2, result, i, c2);
-                    t[i].start();
+                        t[i] = new FixedThread(ar1, ar2, result, i, c2);
+                        t[i].start();
                 }
                 System.out.println();
 
@@ -78,9 +106,7 @@ public class MatrixFixedThread {
                         e.printStackTrace();
                     }
                 }
-                r1--;
-            }
-        }
+        }*/
 
 
         System.out.println();
@@ -93,3 +119,19 @@ public class MatrixFixedThread {
         }
     }
 }
+/*
+*
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+* */
+/*
+1 1 1 1 1 1
+1 1 1 1 1 1
+1 1 1 1 1 1
+1 1 1 1 1 1
+1 1 1 1 1 1
+* */

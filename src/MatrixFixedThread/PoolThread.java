@@ -3,11 +3,11 @@ package MatrixFixedThread;
 import MatrixThreading.MatrixThread;
 
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-public class MatrixFixedThread {
-
-    private static final int NO_THREADS = 5;
-
+public class PoolThread {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         System.out.println("Insert size of first matrix :  ");
@@ -43,45 +43,31 @@ public class MatrixFixedThread {
 
         int[][] result = new int[r1][c2];
 
-        if (r1 <= NO_THREADS){
-            MatrixThread[] t = new MatrixThread[r1];
+        MatrixThread[] t = new MatrixThread[r1];
 
-            for (int i = 0; i < r1; i++) {
-                t[i] = new MatrixThread(ar1, ar2, result, i, c2);
-                t[i].start();
-            }
-            System.out.println();
-
-            for (int i = 0; i < r1; i++) {
-                try {
-                    t[i].join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }else {
-            // if r1 and c2 > --- no of threads = 5 and start from 1 to finish all rows
-            System.out.println("----Out of Bounds----");
-            if (r1 > NO_THREADS){
-                MatrixThread[] t = new MatrixThread[r1];
-
-                for (int i = 0; i < r1; i++) {
-                    t[i] = new MatrixThread(ar1, ar2, result, i, c2);
-                    t[i].start();
-                }
-                System.out.println();
-
-                for (int i = 0; i < r1; i++) {
-                    try {
-                        t[i].join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                r1--;
-            }
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+        for (int i = 0; i < r1; i++) {
+            pool.submit(new MatrixThread(ar1, ar2, result, i, c2));
         }
-
+        pool.shutdown();
+        try {
+            pool.awaitTermination(1, TimeUnit.DAYS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
+        /*for (int i = 0; i < r1; i++) {
+            t[i] = new MatrixThread(ar1, ar2, result, i, c2);
+            t[i].start();
+        }
+        System.out.println();
+        for (int i = 0; i < r1; i++) {
+            try {
+                t[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }*/
 
         System.out.println();
         System.out.println("Result Matrix : ");
