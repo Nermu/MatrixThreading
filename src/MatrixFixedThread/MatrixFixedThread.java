@@ -57,8 +57,29 @@ public class MatrixFixedThread {
                     e.printStackTrace();
                 }
             }
-        }else
+        }else {
+            // if r1 and c2 > --- no of threads = 5 and start from 1 to finish all rows
             System.out.println("----Out of Bounds----");
+            if (r1 > NO_THREADS){
+                MatrixThread[] t = new MatrixThread[r1];
+
+                for (int i = 0; i < r1; i++) {
+                    t[i] = new MatrixThread(ar1, ar2, result, i, c2);
+                    t[i].start();
+                }
+                System.out.println();
+
+                for (int i = 0; i < r1; i++) {
+                    try {
+                        t[i].join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                r1--;
+            }
+        }
+
 
         System.out.println();
         System.out.println("Result Matrix : ");
