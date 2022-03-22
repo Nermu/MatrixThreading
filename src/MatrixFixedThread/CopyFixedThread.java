@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CopyFixedThread {
-
-    private static final int NO_THREADS = 5;
+    private static final int NO_THREADS = 2;
     public static void main(String[] args) throws InterruptedException {
         Scanner input = new Scanner(System.in);
         System.out.println("Insert size of first matrix :  ");
@@ -41,32 +40,17 @@ public class CopyFixedThread {
         System.out.println();
 
         int[][] result = new int[r1][c2];
-        List<FixedThread> threadArr = new ArrayList<FixedThread>(NO_THREADS);
 
+        List<FixedThread> threadArr = new ArrayList<>(NO_THREADS);
 
-
-        //FixedThread[] t = new FixedThread[threadArr.size()];
-
-//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
-//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
-//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
-//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
-//        threadArr.add(new FixedThread(ar1, ar2, result, r1, c2));
-
-        for(int i = 0 ; i <NO_THREADS ; i++){
-
-        }
-
-        System.out.println(threadArr.size());
-        if (r1 < threadArr.size()){
+        if(r1 <= NO_THREADS){
             for (int i = 0; i < r1; i++) {
-
                 threadArr.add(new FixedThread(ar1,ar2,result,i,c2));
                 threadArr.get(i).start();
                 System.out.println("Thread : " + i);
             }
+            System.out.println("There is only " + threadArr.size() + " threads are used..");
             System.out.println();
-
             for (int i = 0; i < r1; i++) {
                 try {
                     threadArr.get(i).join();
@@ -74,42 +58,47 @@ public class CopyFixedThread {
                     e.printStackTrace();
                 }
             }
-        }
-        /*else if (r1 == threadArr.size()){
-            for (int i = 0; i < threadArr.size(); i++) {
-                t[i] = new FixedThread(ar1, ar2, result, i, c2);
-                t[i].start();
+        }else if (r1 > NO_THREADS)
+        {
+            for (int i = 0; i < NO_THREADS; i++){
+                threadArr.add(new FixedThread(ar1,ar2,result,i,c2));
+                threadArr.get(i).start();
                 System.out.println("Thread : " + i);
+
             }
+            System.out.println("There is only " + threadArr.size() + " threads are used.."
+                    + "\nbut there is " + NO_THREADS +" number of threads you're allowed to use.. ");
             System.out.println();
 
-            for (int i = 0; i < threadArr.size(); i++) {
+            for (int i = 0; i < NO_THREADS; i++) {
                 try {
-                    t[i].join();
+                    threadArr.get(i).join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        }
-        else if (r1 > threadArr.size()) {
-            System.out.println("----Out of Bounds----");
-                for (int i = 0; i < r1; i++) {
-                        t[i] = new FixedThread(ar1, ar2, result, i, c2);
-                        t[i].start();
+            if (threadArr.get(r1).isBusy() == false){
+                for (int i = NO_THREADS ; i < r1; i++){
+                    if (i % NO_THREADS == 0){
+                        i = NO_THREADS;
+                    }
+                    System.out.println("Thread free is : " + (i + NO_THREADS));
+                    threadArr.get(i).start();
+                    System.out.println("Thread : " + (i + NO_THREADS));
                 }
-                System.out.println();
-
-                for (int i = 0; i < r1; i++) {
+                for (int i = NO_THREADS; i < r1; i++) {
                     try {
-                        t[i].join();
+                        threadArr.get(i + NO_THREADS).join();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-        }*/
+            }
 
 
-        System.out.println();
+
+        }
+
         System.out.println("Result Matrix : ");
         for (int i = 0; i < ar1.length; i++) {
             for (int j = 0; j < ar2[0].length; j++) {

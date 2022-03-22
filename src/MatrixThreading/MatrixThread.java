@@ -18,17 +18,17 @@ public class MatrixThread extends Thread {
     @Override
     public void run() {
             int i, j;
-            for (  i = 0; i < ar2[0].length; i++) {// ar2[0].length -> num of col(value of elements)
-                result[row][i] = 0;
-                for (  j = 0; j < ar1[0].length; j++){ // ar1[0].length -> num of col
-                    result[row][i] += ar1[row][j] * ar2[j][i];
-                    //tracing
-                    //System.out.println("arr1 with row : " + row + " and j : " + j + " is " + ar1[row][j] + " : "+ currentThread().getName());
-                    //System.out.println("arr2 with j : " + j + " and i : " + i + " is " + ar2[j][i] + " : " + currentThread().getName());
-                    //System.out.println("result of : " + ar1[row][j] + " * " + ar2[j][i] + " is : " + result[row][i]);
+                for (i = 0; i < ar2[0].length; i++) {// ar2[0].length -> num of col(value of elements)
+                    result[row][i] = 0;
+                    for (j = 0; j < ar1[0].length; j++) { // ar1[0].length -> num of col
+                        result[row][i] += ar1[row][j] * ar2[j][i];
+                        //tracing
+                        System.out.println("arr1 with row : " + row + " and j : " + j + " is " + ar1[row][j] + " : " + currentThread().getName());
+                        System.out.println("arr2 with j : " + j + " and i : " + i + " is " + ar2[j][i] + " : " + currentThread().getName());
+                        //System.out.println("result of : " + ar1[row][j] + " * " + ar2[j][i] + " is : " + result[row][i]);
+                    }
                 }
-            }
-        System.out.println("Thread : " + currentThread().getName());
+            System.out.println("Thread : " + currentThread().getName());
     }
 }
 /*
