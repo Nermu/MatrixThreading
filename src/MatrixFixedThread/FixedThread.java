@@ -18,15 +18,18 @@ public class FixedThread extends Thread {
     @Override
     public void run() {
 
+        multiplyTwoMatrices(startRow, stopRow, ar1, ar2, result);
+        System.out.println("Thread : " + currentThread().getName());
+    }
+
+    void multiplyTwoMatrices(int startRow, int stopRow, int [][]ar1, int [][]ar2, int [][]result){
         int k, i, j;
         for (k = startRow; k < stopRow; k++){
             for (i = 0; i < ar2[0].length; i++) {// ar2[0].length -> num of col(value of elements)
-                result[k][i] = 0;
                 for (j = 0; j < ar1[0].length; j++) { // ar1[0].length -> num of col
                     result[k][i] += ar1[k][j] * ar2[j][i];
                 }
             }
         }
-        System.out.println("Thread : " + currentThread().getName());
     }
 }
