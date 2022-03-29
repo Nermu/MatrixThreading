@@ -1,12 +1,12 @@
 package MatrixFixedThread;
 
-import MatrixThreading.MatrixThread;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MatrixFixedThread {
 
-    private static final int NO_THREADS = 5;
+    private final static int NUM_OF_THREAD = 2;
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -43,13 +43,22 @@ public class MatrixFixedThread {
 
         int[][] result = new int[r1][c2];
 
-        if (r1 <= NO_THREADS){
-            MatrixThread[] t = new MatrixThread[r1];
+        int numRowForThread;
+        int startRow = 0;
 
+        FixedThread[] t = new FixedThread[NUM_OF_THREAD];
+        List<FixedThread> threads = new ArrayList<>(NUM_OF_THREAD);
+
+        if (r1 <= NUM_OF_THREAD){
             for (int i = 0; i < r1; i++) {
-                t[i] = new MatrixThread(ar1, ar2, result, i, c2);
+                t[i] = new FixedThread(i , c2, ar1, ar2, result);
+                threads.add(t[i]);
                 t[i].start();
+                System.out.println("Thread : " + i);
             }
+
+            System.out.println("There is only " + threads.size() + " threads are used.."
+                    + "\nand "+ r1 + " rows are used...");
             System.out.println();
 
             for (int i = 0; i < r1; i++) {
@@ -59,29 +68,32 @@ public class MatrixFixedThread {
                     e.printStackTrace();
                 }
             }
-        }else {
-            // if r1 and c2 > --- no of threads = 5 and start from 1 to finish all rows
-            System.out.println("----Out of Bounds----");
-            if (r1 > NO_THREADS){
-                MatrixThread[] t = new MatrixThread[r1];
-
-                for (int i = 0; i < r1; i++) {
-                    t[i] = new MatrixThread(ar1, ar2, result, i, c2);
-                    t[i].start();
+        }else if (r1 > NUM_OF_THREAD){
+            for (int j = 0; j < NUM_OF_THREAD; j++) {
+                if (j < NUM_OF_THREAD - 1) {
+                    numRowForThread = (r1 / NUM_OF_THREAD);
+                } else {
+                    numRowForThread = (r1 / NUM_OF_THREAD) + (r1 % NUM_OF_THREAD);
                 }
-                System.out.println();
+                t[j] = new FixedThread( startRow, startRow + numRowForThread, ar1, ar2, result);
+                threads.add(t[j]);
+                t[j].start();
+                startRow += numRowForThread;
+                System.out.println("Thread : " + j);
+            }
 
-                for (int i = 0; i < r1; i++) {
-                    try {
-                        t[i].join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            System.out.println("There is only " + threads.size() + " threads are used.."
+                    + "\nand "+ r1 + " rows are used...");
+            System.out.println();
+
+            for (FixedThread matrixThread : threads) {
+                try {
+                    matrixThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                r1--;
             }
         }
-
 
         System.out.println();
         System.out.println("Result Matrix : ");

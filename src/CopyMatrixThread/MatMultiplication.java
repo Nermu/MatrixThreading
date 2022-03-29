@@ -42,15 +42,12 @@ public class MatMultiplication {
 
         int[][] result = new int[r1][c2];
 
-        int numRowForThread;
-        int startRow = 0;
-
         MatrixFixedThread[] t = new MatrixFixedThread[NUM_OF_THREAD];
         List<MatrixFixedThread> threads = new ArrayList<>(NUM_OF_THREAD);
 
         if (r1 <= NUM_OF_THREAD){
             for (int i = 0; i < r1; i++) {
-                t[i] = new MatrixFixedThread(i , c2, ar1, ar2, result);
+                t[i] = new MatrixFixedThread(i , ar1, ar2, result);
                 threads.add(t[i]);
                 t[i].start();
                 System.out.println("Thread : " + i);
@@ -64,30 +61,46 @@ public class MatMultiplication {
                     e.printStackTrace();
                 }
             }
-        }else if (r1 > NUM_OF_THREAD){
-            for (int j = 0; j < ar1.length - 1; j++) {
-                if (j < NUM_OF_THREAD - 1) {
-                    numRowForThread = (r1 / NUM_OF_THREAD);
-                } else {
-                    numRowForThread = (r1 / NUM_OF_THREAD) + (r1 % NUM_OF_THREAD);
-                }
-                t[j] = new MatrixFixedThread( startRow, startRow + numRowForThread, ar1, ar2, result);
-                threads.add(t[j]);
-                t[j].start();
-                startRow += numRowForThread;
-                System.out.println("Thread : " + j);
-            }
-            System.out.println("There is only " + threads.size() + " threads are used..");
-            System.out.println();
-            for (MatrixFixedThread matrixThread : threads) {
-                try {
-                    matrixThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
+        else if (r1 > NUM_OF_THREAD) {
+            for (int i = 0; i < r1  ; i++) {
+                if( i < NUM_OF_THREAD){
+                    threads.add(new MatrixFixedThread(i,ar1,ar2,result));
+                    threads.get(i).start();
+                    System.out.println("Thread : " + i);
+                    System.out.println();
+                }
+                else if (i >= NUM_OF_THREAD){
+                    if (i % NUM_OF_THREAD != 0) {
+                        int var = (i % NUM_OF_THREAD);
+                        System.out.println("value of Var : " + var);
+                        try {
+                            threads.get(var).join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        threads.get(var).start();
+                       System.out.println("Thread : " + i);
+                       System.out.println();
+                    }
+                    else if (i % NUM_OF_THREAD == 0) {
+                        int var = NUM_OF_THREAD;
+                        System.out.println("value of Var : " + var);
+                        try {
+                            threads.get(var - 1).join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        threads.get(var - 1).start();
+                        System.out.println("Thread : " + i);
+                        System.out.println();
+                    }
+                    System.out.println("There is only " + threads.size() + " threads are used.."
+                            + "\nbecause number of row > number of threads");
+                }
+            }
 
+        }
         System.out.println();
         System.out.println("Result Matrix : ");
         for (int i = 0; i < ar1.length; i++) {

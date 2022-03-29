@@ -1,49 +1,32 @@
 package MatrixFixedThread;
 
 public class FixedThread extends Thread {
-
-    private volatile boolean isBusy;
-
+    private int startRow, stopRow;
     private int[][] ar1;
     private int[][] ar2;
     private int[][] result;
-    private int row, col;
 
-    public FixedThread(int[][] ar1, int[][] ar2, int[][] result, int row, int col) {
+    public FixedThread(int startRow, int stopRow, int[][] ar1, int[][] ar2, int[][] result) {
+        super();
+        this.startRow = startRow;
+        this.stopRow = stopRow;
         this.ar1 = ar1;
         this.ar2 = ar2;
         this.result = result;
-        this.row = row;
-        this.col = col;
-        this.isBusy = true;
     }
 
-    public boolean isBusy() {
-        return isBusy;
-    }
     @Override
     public void run() {
-            int i, j;
+
+        int k, i, j;
+        for (k = startRow; k < stopRow; k++){
             for (i = 0; i < ar2[0].length; i++) {// ar2[0].length -> num of col(value of elements)
-                result[row][i] = 0;
+                result[k][i] = 0;
                 for (j = 0; j < ar1[0].length; j++) { // ar1[0].length -> num of col
-                    result[row][i] += ar1[row][j] * ar2[j][i];
+                    result[k][i] += ar1[k][j] * ar2[j][i];
                 }
             }
-            System.out.println("isBusy " + isBusy);
-
-        isBusy = false;
-        System.out.println("isBusy " + isBusy);
+        }
+        System.out.println("Thread : " + currentThread().getName());
     }
 }
-/*
-*
-1 2 3 4
-5 6 7 8
-9 1 2 3
-*
-1 2 3
-4 5 6
-7 8 9
-1 2 3
-* */
